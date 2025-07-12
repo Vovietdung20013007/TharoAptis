@@ -1,0 +1,473 @@
+import React, { useState, useCallback } from "react";
+import { DndProvider, useDrag, useDrop } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import styles from "./TharoAptisReading.module.css";
+
+const PART5_PAGES = [
+  {
+    choices: [
+      "Different types of tulip",
+      "Trade across Europe",
+      "An unexpected turn of events",
+      "Coming into fashion",
+      "The economy during the Golden Age",
+      "Trade mechanics\t",
+      "An object of trade",
+    ],
+    suggestions: [
+      "1.Nền kinh tế trong Thời kỳ Hoàng kim",
+      "2.Trở thành mốt thời thượng",
+      "3.Một đối tượng của thương mại",
+      "4.Các loại hoa tulip khác nhau",
+      "5.Cơ chế thương mại",
+      "6.Thương mại xuyên châu Âu",
+      "7.Một bước ngoặt bất ngờ",
+    ],
+    correctOrder: [4, 3, 6, 0, 5, 1, 2],
+  },
+  {
+    choices: [
+      "Homes too big",
+      "Making a small impact",
+      "Live in a small scale",
+      "The lasting change",
+      "Advantages",
+      "Motivated",
+      "Sharing skills",
+    ],
+    suggestions: [
+      "1- Sống trong một không gian nhỏ",
+      "2- Có động lực",
+      "3- Ưu điểm",
+      "4- Nhà quá lớn",
+      "5- Chia sẻ kỹ năng",
+      "6- Tạo ra tác động nhỏ",
+      "7- Sự thay đổi lâu dài",
+    ],
+    correctOrder: [2, 5, 4, 0, 6, 1, 3],
+  },
+  {
+    choices: [
+      "A different set of values",
+      "A modern day alternative",
+      "Symbol of privilege and wealth",
+      "Away from enclosure towards greater freedom",
+      "Opening the door for everyone",
+      "Away from amusement towards instruction",
+      "A new mission of conversation"
+    ],
+    suggestions: [
+      "1. Biểu tượng của đặc quyền và sự giàu có",
+      "2. Mở cửa cho tất cả mọi người",
+      "3. Tránh xa sự giải trí để hướng tới sự hướng dẫn",
+      "4. Tránh xa sự bao vây để hướng tới sự tự do hơn",
+      "5. Một tập hợp các giá trị khác",
+      "6. Một sứ mệnh mới của cuộc trò chuyện",
+      "7. Một sự thay thế hiện đại"
+    ],
+    correctOrder: [2, 4, 5, 3, 0, 6, 1]
+  },
+  {
+    choices: [
+      "The ancient origin of coffee",
+      "Health risks versus health benefits debate",
+      "Problems of coffee economy",
+      "A habit that has become a big economy",
+      "The custom of coffee drinking begins to spread",
+      "A remedy of unjust revenue distribution",
+      "Coffee encourages"
+    ],
+    suggestions: [
+      "1. Thói quen uống cà phê bắt đầu lan rộng",
+      "2. Cà phê khuyến khích",
+      "3. Một thói quen đã trở thành nền kinh tế lớn",
+      "4. Các vấn đề của nền kinh tế cà phê",
+      "5. Một biện pháp khắc phục tình trạng phân phối doanh thu không công bằng",
+      "6. Tranh luận về rủi ro sức khỏe so với lợi ích sức khỏe",
+      "7. Nguồn gốc cổ xưa của cà phê"
+    ],
+    correctOrder: [4, 6, 3, 2, 5, 1, 0]
+  },
+  {
+    choices: [
+      "The reason of secrecy",
+      "A temporary experiment",
+      "Making things last longer",
+      "Still relevant to our times",
+      "Reason to reach a compromise",
+      "Important lessons for all of us",
+      "The difficulty of being generous"
+    ],
+    suggestions: [
+      "1. Làm cho mọi thứ kéo dài lâu hơn",
+      "2. Một thử nghiệm tạm thời",
+      "3. Lý do của sự bí mật",
+      "4. Vẫn còn phù hợp với thời đại của chúng ta",
+      "5. Khó khăn khi hào phóng",
+      "6. Lý do để đạt được sự thỏa hiệp",
+      "7. Những bài học quan trọng cho tất cả chúng ta"
+    ],
+    correctOrder: [2, 1, 0, 3, 6, 4, 5]
+  },
+  {
+    choices: [
+      "A Journey made by stages",
+      "Technology helps uncover the ocean's secret",
+      "A new evidence that leads to speculation",
+      "Natural barrier to resettlement",
+      "Lack of knowledge and skills",
+      "Determination of the explorers through the ages",
+      "An alternative history of settlement"
+    ],
+    suggestions: [
+      "1. Một lịch sử định cư thay thế",
+      "2. Rào cản tự nhiên đối với việc tái định cư",
+      "3. Công nghệ giúp khám phá bí mật của đại dương",
+      "4. Hành trình theo từng chặng",
+      "5. Bằng chứng mới dẫn đến suy đoán",
+      "6. Thiếu kiến ​​thức và kỹ năng",
+      "7. Quyết tâm của các nhà thám hiểm qua các thời đại"
+    ],
+    correctOrder: [6, 3, 1, 0, 2, 4, 5]
+  },
+  {
+    choices: [
+      "Keeping the readers guessing",
+      "Dickens for our time",
+      "Difficulties for modern readers",
+      "Dickens's early success",
+      "Bring the books to life",
+      "Trying to protect his property",
+      "The influence of media"
+    ],
+    suggestions: [
+      "1. Dickens cho thời đại chúng ta",
+      "2. Những khó khăn đối với độc giả hiện đại",
+      "3. Giữ cho độc giả đoán già đoán non",
+      "4. Ảnh hưởng của phương tiện truyền thông",
+      "5. Thành công ban đầu của Dickens",
+      "6. Cố gắng bảo vệ tài sản của mình",
+      "7. Thổi hồn vào những cuốn sách"
+    ],
+    correctOrder: [1, 2, 0, 6, 3, 5, 4]
+  },
+  {
+    choices: [
+      "Effects of a changing diet",
+      "Cooking methods",
+      "The influence of philosophy",
+      "The origins of chinese food",
+      "The style of eating",
+      "Regional variations",
+      "Changes in the Chinese diets"
+    ],
+    suggestions: [
+      "1. Nguồn gốc của ẩm thực Trung Hoa",
+      "2. Ảnh hưởng của triết học",
+      "3. Biến thể theo vùng",
+      "4. Phương pháp nấu ăn",
+      "5. Phong cách ăn uống",
+      "6. Thay đổi trong chế độ ăn uống của người Trung Hoa",
+      "7. Tác động của chế độ ăn uống thay đổi"
+    ],
+    correctOrder: [3, 2, 5, 1, 4, 6, 0]
+  },
+  {
+    choices: [
+      "The success of a simple idea",
+      "Factors contributing to inactivity",
+      "A design for exercise and for study",
+      "Achieving the right balance",
+      "Ways in which environment can influence behavior",
+      "The wider effects of regular activity",
+      "The situation have the potential of being worst"
+    ],
+    suggestions: [
+      "1. Các yếu tố góp phần gây ra tình trạng không hoạt động",
+      "2. Tình hình có khả năng trở nên tồi tệ hơn",
+      "3. Sự thành công của một ý tưởng đơn giản",
+      "4. Những tác động rộng hơn của hoạt động thường xuyên",
+      "5. Những cách mà môi trường có thể ảnh hưởng đến hành vi",
+      "6. Thiết kế cho bài tập và học tập",
+      "7. Đạt được sự cân bằng phù hợp"
+    ],
+    correctOrder: [1, 6, 0, 5, 4, 2, 3]
+  },
+  {
+    choices: [
+      "Hidden geography",
+      "Why is it so cold?",
+      "First step on the ice",
+      "Race to the Pole",
+      "Less effort needed",
+      "Who is in charge?",
+      "Where is the end of the Earth?"
+    ],
+    suggestions: [
+      "1. Ai là người chịu trách nhiệm?",
+      "2. Bước chân đầu tiên trên băng",
+      "3. Điểm tận cùng của Trái Đất là ở đâu?",
+      "4. Địa lý ẩn giấu",
+      "5. Cuộc đua đến Cực",
+      "6. Cần ít nỗ lực hơn",
+      "7. Tại sao lại lạnh như vậy?"
+    ],
+    correctOrder: [5, 2, 6, 0, 3, 4, 1]
+  },
+  {
+    choices: [
+      "Earning a reputation",
+      "The easiest way to travel",
+      "A need for change",
+      "Generations of champions",
+      "Result of a lucky escape",
+      "Origins of what the winner receives",
+      "Not in it for the money"
+    ],
+    suggestions: [
+      "1. Cách dễ nhất để đi du lịch",
+      "2. Kết quả của một cuộc trốn thoát may mắn",
+      "3. Nguồn gốc của những gì người chiến thắng nhận được",
+      "4. Cần thay đổi",
+      "5. Kiếm được danh tiếng",
+      "6. Nhiều thế hệ nhà vô địch",
+      "7. Không vì tiền"
+    ],
+    correctOrder: [1, 4, 5, 2, 0, 3, 6]
+  },
+  {
+    choices: [
+      "Respect the life",
+      "Types of vegetarian",
+      "Possible to happen",
+      "Health gets better with diet",
+      "Farming Factory -  it is a harmful thing",
+      "Various explanations",
+      "Our responsibilities with global"
+    ],
+    suggestions: [
+      "1. Các loại ăn chay",
+      "2. Nhiều giải thích khác nhau",
+      "3. Có thể xảy ra",
+      "4. Nhà máy nông nghiệp - đó là một điều có hại",
+      "5. Tôn trọng sự sống",
+      "6. Sức khỏe được cải thiện nhờ chế độ ăn uống",
+      "7. Trách nhiệm của chúng ta với toàn cầu"
+    ],
+    correctOrder: [1, 5, 2, 4, 0, 3, 6]
+  },
+  {
+    choices: [
+      "A way to learn discipline and the importance of routine",
+      "A physically demanding activity",
+      "Develop a greater sense of well-being",
+      "Enhanced sensitivity to other people's feelings",
+      "A great opportunity to broaden your social circle",
+      "A creative outlet for expressing emotions",
+      "A good way to boost your memory"
+    ],
+    suggestions: [
+      "1. Một hoạt động đòi hỏi thể lực",
+      "2. Một cách tốt để tăng cường trí nhớ",
+      "3. Một cơ hội tuyệt vời để mở rộng vòng tròn xã hội của bạn",
+      "4. Một cách để học tính kỷ luật và tầm quan trọng của thói quen",
+      "5. Một lối thoát sáng tạo để thể hiện cảm xúc",
+      "6. Tăng cường sự nhạy cảm với cảm xúc của người khác",
+      "7. Phát triển cảm giác khỏe mạnh hơn"
+    ],
+    correctOrder: [1, 6, 4, 0, 5, 3, 2]
+  },{
+  choices: [
+    "The importance of planning in advance",
+    "A competitive business",
+    "The advantages of having your own space",
+    "The price of convenience may be high",
+    "Sensible financial choice",
+    "The impact of lack of freedom",
+    "The benefits of living with less"
+  ],
+  suggestions: [
+    "1. Một lựa chọn tài chính hợp lý",
+    "2. Cái giá của sự tiện lợi có thể cao",
+    "3. Tầm quan trọng của việc lập kế hoạch trước",
+    "4. Tác động của việc thiếu tự do",
+    "5. Lợi ích của việc sống với ít hơn",
+    "6. Lợi thế của việc có không gian riêng",
+    "7. Một doanh nghiệp cạnh tranh"
+  ],
+  correctOrder: [4, 3, 0, 5, 6, 2, 1]
+}
+
+];
+
+const ItemTypes = { HEADING: "heading" };
+
+function HeadingChoice({ text, index, isDropped }) {
+  const [{ isDragging }, drag] = useDrag({
+    type: ItemTypes.HEADING,
+    item: { index },
+    canDrag: !isDropped,
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
+  return (
+    <div
+      ref={drag}
+      className={styles.choice}
+      style={{
+        opacity: isDragging ? 0.5 : 1,
+        background: isDropped ? "#e0e0e0" : "#fff",
+        cursor: isDropped ? "not-allowed" : "grab",
+      }}
+    >
+      {text}
+    </div>
+  );
+}
+
+function DroppableSlot({ value, onDrop, index, isCorrect, isFilled, headings }) {
+  const [{ isOver, canDrop }, drop] = useDrop({
+    accept: ItemTypes.HEADING,
+    drop: (item) => onDrop(item.index, index),
+    canDrop: (item) => value === null,
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+      canDrop: monitor.canDrop(),
+    }),
+  });
+  let borderColor = "#bbb";
+  let background = isFilled ? "#f0f7ff" : isOver && canDrop ? "#e6f7ff" : "#f5f5f5";
+  if (isFilled) {
+    borderColor = isCorrect ? "#2ecc40" : "#ff4136";
+    background = isCorrect ? "#eaffea" : "#ffeaea";
+  }
+  return (
+    <div
+      ref={drop}
+      className={styles["droppable-slot"]}
+      style={{
+        borderColor,
+        background,
+        minWidth: 220,
+      }}
+      onDoubleClick={() => value !== null && onDrop(null, index)}
+      title={value !== null ? "Double click to remove" : ""}
+    >
+      {value !== null ? headings[value] : ""}
+    </div>
+  );
+}
+
+const TharoAptisReadingPart5 = () => {
+  const [page, setPage] = useState(0);
+  const [slotValues, setSlotValues] = useState(Array(7).fill(null));
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const { choices, suggestions, correctOrder } = PART5_PAGES[page];
+  const used = slotValues.filter((v) => v !== null);
+  const availableHeadings = choices.map((c, i) => ({
+    text: c,
+    index: i,
+    isDropped: used.includes(i),
+  }));
+
+  const handleDrop = useCallback((headingIndex, slotIndex) => {
+    setSlotValues((prev) => {
+      const newArr = [...prev];
+      if (headingIndex === null) {
+        newArr[slotIndex] = null;
+      } else {
+        if (newArr[slotIndex] !== null) return prev;
+        if (prev.includes(headingIndex)) return prev;
+        newArr[slotIndex] = headingIndex;
+      }
+      return newArr;
+    });
+  }, []);
+
+  // Reset slotValues khi đổi trang
+  React.useEffect(() => {
+    setSlotValues(Array(7).fill(null));
+    setShowSuggestions(false);
+  }, [page]);
+
+  return (
+    <DndProvider backend={HTML5Backend}>
+      <div style={{ maxWidth: 700, margin: "40px auto", background: "#fff", borderRadius: 25, boxShadow: "0 2px 12px rgba(0,0,0,0.07)", padding: 24 }}>
+        <div className={styles.pagination}>
+          <button
+            className={styles['pagination-btn']}
+            onClick={() => setPage(p => Math.max(0, p - 1))}
+            disabled={page === 0}
+          >&lt;</button>
+          <span className={styles['pagination-label']}>Page {page + 1} / {PART5_PAGES.length}</span>
+          <button
+            className={styles['pagination-btn']}
+            onClick={() => setPage(p => Math.min(PART5_PAGES.length - 1, p + 1))}
+            disabled={page === PART5_PAGES.length - 1}
+          >&gt;</button>
+        </div>
+        <button
+          onClick={() => setShowSuggestions(s => !s)}
+          style={{
+            marginBottom: 18,
+            padding: '8px 18px',
+            fontWeight: 600,
+            fontSize: 16,
+            background: '#2d3a4a',
+            color: '#fff',
+            border: 'none',
+            borderRadius: 6,
+            cursor: 'pointer',
+            boxShadow: '0 1px 4px rgba(0,0,0,0.07)',
+            transition: 'background 0.2s',
+          }}
+        >
+          Gợi ý
+        </button>
+        {showSuggestions && (
+          <div style={{
+            background: '#f5f5f5',
+            border: '1px solid #bbb',
+            borderRadius: 6,
+            padding: 16,
+            marginBottom: 18,
+            fontSize: 16,
+            color: '#2d3a4a',
+            lineHeight: 1.7,
+          }}>
+            {suggestions.map((s, idx) => (
+              <div key={idx} style={{ marginBottom: 4 }}>{s}</div>
+            ))}
+          </div>
+        )}
+        <div style={{ display: 'flex', gap: 32 }}>
+          <div style={{ flex: 1 }}>
+            {[0,1,2,3,4,5,6].map(idx => (
+              <div key={idx} style={{ display: 'flex', alignItems: 'center', marginBottom: 12 }}>
+                <span style={{ width: 18, fontWeight: 600 }}>{idx}.</span>
+                <DroppableSlot
+                  value={slotValues[idx]}
+                  index={idx}
+                  onDrop={handleDrop}
+                  isFilled={slotValues[idx] !== null}
+                  isCorrect={slotValues[idx] !== null && slotValues[idx] === correctOrder[idx]}
+                  headings={choices}
+                />
+              </div>
+            ))}
+          </div>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 14 }}>
+            {availableHeadings.map(({ text, index, isDropped }) =>
+              !isDropped ? (
+                <HeadingChoice key={index} text={text} index={index} isDropped={isDropped} />
+              ) : null
+            )}
+          </div>
+        </div>
+      </div>
+    </DndProvider>
+  );
+};
+
+export default TharoAptisReadingPart5; 
