@@ -5,6 +5,133 @@ import styles from "./TharoAptisReading.module.css";
 
 const PART5_PAGES = [
   {
+    topic :"MOUNTAIN (đề mới cập nhật T10/2025) - thi nhiều",
+    choices: [
+      '1.The wrong priorities',
+      '2.A more intimate relationships',
+      '3.Changing the definition of mountain',
+      '4.The unique sense of achievement',
+      '5.Focus on stability',
+      '6.Publicity of achievement',
+      '7.Worrying connections'
+    ],
+    suggestions: [
+      '1.Thay đổi định nghĩa về ngọn núi',
+      '2.Cảm giác thành tựu độc đáo',
+      '3.Sự công khai thành tích',
+      '4.Các ưu tiên sai lầm',
+      '5.Những mối liên hệ đáng lo ngại',
+      '6.Một mối quan hệ thân thiết hơn',
+      '7.Tập trung vào sự ổn định'
+    ],
+    correctOrder: [2, 3, 5, 0, 6, 1, 4]
+  },
+  {
+    choices: [
+      '1.Difficulty Changing Old Habits',
+      '2.Alternative solutions worth considering',
+      '3.A way of life now out date',
+      '4.Benefits for Employees',
+      '5.Undesirable financial consequences',
+      '6.Unforeseen Challenges for Employees',
+      '7.Unfair for some people'
+    ],
+    suggestions: [
+      '1.Một lối sống đã lỗi thời',
+      '2.Lợi ích cho nhân viên',
+      '3.Những hậu quả tài chính không mong muốn',
+      '4.Những thách thức không lường trước được đối với nhân viên',
+      '5.Khó khăn trong việc thay đổi thói quen cũ',
+      '6.Không công bằng đối với một số người',
+      '7.Các giải pháp thay thế đáng xem xét'
+    ],
+    correctOrder: [2, 3, 4, 5, 0, 6, 1]
+  },
+  {
+    choices: [
+      '1.Building inclusive digital ecosystems',
+      '2.Concerns about cybersecurity risks',
+      '3.Promoting digital training skills',
+      '4.Redefining business models with technology',
+      '5.Focusing on ethical technology development',
+      '6.Over-reliance on automated systems',
+      '7.Enhancing productivity through automation'
+    ],
+    suggestions: [
+      '1.Định nghĩa lại mô hình kinh doanh bằng công nghệ',
+      '2.Nâng cao năng suất thông qua tự động hóa',
+      '3.Thúc đẩy kỹ năng đào tạo kỹ thuật số',
+      '4.Phụ thuộc quá mức vào các hệ thống tự động',
+      '5.Những lo ngại về rủi ro an ninh mạng',
+      '6.Xây dựng hệ sinh thái kỹ thuật số toàn diện',
+      '7.Tập trung vào phát triển công nghệ có đạo đức'
+    ],
+    correctOrder: [3, 6, 2, 5, 1, 0, 4]
+  },
+  {
+    choices: [
+      '1.Labels can change perspective on people',
+      '2.Redefining holistic health approaches',
+      '3.Promoting mental health awareness',
+      '4.Attempting to create a gender balance',
+      '5.Uniformity is not always beneficial',
+      '6.Encouraging community fitness programs',
+      '7.Overemphasis on trendy diets'
+    ],
+    suggestions: [
+      '1.Định nghĩa lại các phương pháp tiếp cận sức khỏe toàn diện',
+      '2.Thúc đẩy nhận thức về sức khỏe tinh thần',
+      '3.Khuyến khích các chương trình thể dục cộng đồng',
+      '4.Quá chú trọng vào các chế độ ăn kiêng theo xu hướng',
+      '5.Nhãn dán có thể thay đổi góc nhìn về con người',
+      '6.Nỗ lực tạo ra sự cân bằng giới',
+      '7.Sự đồng nhất không phải lúc nào cũng có lợi'
+    ],
+    correctOrder: [1, 2, 5, 6, 0, 3, 4]
+  },
+  {
+    choices: [
+      '1.The problem with labels',
+      '2.A long career of excellence',
+      '3.Man unfairly credited',
+      '4.Recognising a pioneer\'s influence',
+      '5.Gender obscure achievements',
+      '6.Attempting to create a gender balance',
+      '7.The limits of one-size-fits-all equality'
+    ],
+    suggestions: [
+      '1.Công nhận ảnh hưởng của một người tiên phong',
+      '2.Thành tựu bị lu mờ bởi giới tính',
+      '3.Giới hạn của sự bình đẳng "một khuôn cho tất cả"',
+      '4.Một sự nghiệp xuất sắc kéo dài',
+      '5.Vấn đề với các nhãn dán',
+      '6.Người đàn ông được ghi công một cách không công bằng',
+      '7.Nỗ lực tạo ra sự cân bằng giới'
+    ],
+    correctOrder: [3, 4, 6, 1, 0, 2, 5]
+  },
+  {
+    choices: [
+      '1.Overreliance on digital interfaces',
+      '2.Promoting tech-driven education programs',
+      '3.Concerns about technology access disparities',
+      '4.Building innovative tech communities',
+      '5.Enhancing productivity through smart automation',
+      '6.Focusing on sustainable digital solutions',
+      '7.Redefining human-technology interaction'
+    ],
+    suggestions: [
+      '1.Nâng cao năng suất thông qua tự động hóa thông minh',
+      '2.Phụ thuộc quá nhiều vào giao diện kỹ thuật số',
+      '3.Định nghĩa lại tương tác giữa con người và công nghệ',
+      '4.Những lo ngại về sự chênh lệch trong tiếp cận công nghệ',
+      '5.Thúc đẩy các chương trình giáo dục dựa trên công nghệ',
+      '6.Tập trung vào các giải pháp kỹ thuật số bền vững',
+      '7.Xây dựng cộng đồng công nghệ đổi mới'
+    ],
+    correctOrder: [4, 0, 6, 2, 1, 5, 3]
+  },
+  {
     choices: [
       "Different types of tulip",
       "Trade across Europe",
@@ -363,7 +490,7 @@ const TharoAptisReadingPart5 = () => {
   const [page, setPage] = useState(0);
   const [slotValues, setSlotValues] = useState(Array(7).fill(null));
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const { choices, suggestions, correctOrder } = PART5_PAGES[page];
+  const { topic ,choices, suggestions, correctOrder } = PART5_PAGES[page];
   const used = slotValues.filter((v) => v !== null);
   const availableHeadings = choices.map((c, i) => ({
     text: c,
@@ -406,6 +533,9 @@ const TharoAptisReadingPart5 = () => {
             onClick={() => setPage(p => Math.min(PART5_PAGES.length - 1, p + 1))}
             disabled={page === PART5_PAGES.length - 1}
           >&gt;</button>
+        </div>
+        <div><span className="topic-color">{topic}</span>
+
         </div>
         <button
           onClick={() => setShowSuggestions(s => !s)}
