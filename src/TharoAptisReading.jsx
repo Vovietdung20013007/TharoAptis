@@ -1,6 +1,4 @@
 import React, { useState, useCallback } from "react";
-import { DndProvider, useDrag, useDrop } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
 import styles from "./TharoAptisReading.module.css";
 
 const DEFAULT_CHOICES = [
@@ -13,53 +11,38 @@ const DEFAULT_CHOICES = [
 const DEFAULT_CORRECT_ORDER = [1, 4, 2, 3, 0];
 const DEFAULT_TOPIC = "Delivery man";
 const DEFAULT_TITLE = "";
-const ItemTypes = { CHOICE: "choice" };
 
-function Choice({ text, index, isDropped }) {
-  const [{ isDragging }, drag] = useDrag({
-    type: ItemTypes.CHOICE,
-    item: { index },
-    canDrag: !isDropped,
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  });
+function Choice({ text, index, isDropped, onClick }) {
   return (
     <div
-      ref={drag}
       className={styles.choice}
-      style={{ opacity: isDragging ? 0.5 : 1, background: isDropped ? "#e0e0e0" : "#fff", cursor: isDropped ? "not-allowed" : "grab" }}
+      style={{ 
+        background: isDropped ? "#e0e0e0" : "#fff", 
+        cursor: isDropped ? "not-allowed" : "pointer",
+        opacity: isDropped ? 0.6 : 1
+      }}
+      onClick={() => !isDropped && onClick(index)}
     >
       {text}
     </div>
   );
 }
 
-function DroppableSlot({ value, onDrop, index, isCorrect, isFilled, choices }) {
-  const [{ isOver, canDrop }, drop] = useDrop({
-    accept: ItemTypes.CHOICE,
-    drop: (item) => onDrop(item.index, index),
-    canDrop: (item) => value === null,
-    collect: (monitor) => ({
-      isOver: monitor.isOver(),
-      canDrop: monitor.canDrop(),
-    }),
-  });
+function DroppableSlot({ value, onRemove, index, isCorrect, isFilled, choices }) {
   let borderColor = "#bbb";
-  let background = isFilled ? "#f0f7ff" : isOver && canDrop ? "#e6f7ff" : "#f5f5f5";
+  let background = isFilled ? "#f0f7ff" : "#f5f5f5";
   if (isFilled) {
     borderColor = isCorrect ? "#2ecc40" : "#ff4136";
     background = isCorrect ? "#eaffea" : "#ffeaea";
   }
   return (
     <div
-      ref={drop}
       className={styles["droppable-slot"]}
       style={{
         borderColor,
         background,
       }}
-      onDoubleClick={() => value !== null && onDrop(null, index)}
+      onDoubleClick={() => value !== null && onRemove(index)}
       title={value !== null ? "Double click to remove" : ""}
     >
       {value !== null ? choices[value] : ""}
@@ -76,49 +59,53 @@ const TharoAptisReading = ({ topic = DEFAULT_TOPIC,title = DEFAULT_TITLE , choic
     isDropped: used.includes(i),
   }));
 
-  const handleDrop = useCallback((choiceIndex, slotIndex) => {
+  const handleChoiceClick = useCallback((choiceIndex) => {
     setSlotValues((prev) => {
       const newArr = [...prev];
-      if (choiceIndex === null) {
-        newArr[slotIndex] = null;
-      } else {
-        if (newArr[slotIndex] !== null) return prev;
-        if (prev.includes(choiceIndex)) return prev;
-        newArr[slotIndex] = choiceIndex;
+      // Tìm vị trí trống đầu tiên
+      const emptySlotIndex = newArr.findIndex(val => val === null);
+      if (emptySlotIndex !== -1) {
+        newArr[emptySlotIndex] = choiceIndex;
       }
       return newArr;
     });
   }, []);
 
+  const handleRemove = useCallback((slotIndex) => {
+    setSlotValues((prev) => {
+      const newArr = [...prev];
+      newArr[slotIndex] = null;
+      return newArr;
+    });
+  }, []);
+
   return (
-    <DndProvider backend={HTML5Backend}>
-      <div className={styles.container}>
-        <h2 className={styles.heading}>{topic}</h2>
-        <h2 className={styles.heading}>{title}</h2>
-        <div className={styles["question-box"]}>
-          <div className={styles["droppable-list"]}>
-            {slotValues.map((val, idx) => (
-              <DroppableSlot
-                key={idx}
-                value={val}
-                index={idx}
-                onDrop={handleDrop}
-                isFilled={val !== null}
-                isCorrect={val !== null && val === correctOrder[idx]}
-                choices={choices}
-              />
-            ))}
-          </div>
-          <div className={styles["choices-list"]}>
-            {availableChoices.map(({ text, index, isDropped }) =>
-              !isDropped ? (
-                <Choice key={index} text={text} index={index} isDropped={isDropped} />
-              ) : null
-            )}
-          </div>
+    <div className={styles.container}>
+      <h2 className={styles.heading}>{topic}</h2>
+      <h2 className={styles.heading}>{title}</h2>
+      <div className={styles["question-box"]}>
+        <div className={styles["droppable-list"]}>
+          {slotValues.map((val, idx) => (
+            <DroppableSlot
+              key={idx}
+              value={val}
+              index={idx}
+              onRemove={handleRemove}
+              isFilled={val !== null}
+              isCorrect={val !== null && val === correctOrder[idx]}
+              choices={choices}
+            />
+          ))}
+        </div>
+        <div className={styles["choices-list"]}>
+          {availableChoices.map(({ text, index, isDropped }) =>
+            !isDropped ? (
+              <Choice key={index} text={text} index={index} isDropped={isDropped} onClick={handleChoiceClick} />
+            ) : null
+          )}
         </div>
       </div>
-    </DndProvider>
+    </div>
   );
 };
 

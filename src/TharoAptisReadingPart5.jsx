@@ -1,6 +1,4 @@
 import React, { useState, useCallback } from "react";
-import { DndProvider, useDrag, useDrop } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
 import styles from "./TharoAptisReading.module.css";
 
 const PART5_PAGES = [
@@ -427,58 +425,38 @@ const PART5_PAGES = [
 
 ];
 
-const ItemTypes = { HEADING: "heading" };
-
-function HeadingChoice({ text, index, isDropped }) {
-  const [{ isDragging }, drag] = useDrag({
-    type: ItemTypes.HEADING,
-    item: { index },
-    canDrag: !isDropped,
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  });
+function HeadingChoice({ text, index, isDropped, onClick }) {
   return (
     <div
-      ref={drag}
       className={styles.choice}
       style={{
-        opacity: isDragging ? 0.5 : 1,
         background: isDropped ? "#e0e0e0" : "#fff",
-        cursor: isDropped ? "not-allowed" : "grab",
+        cursor: isDropped ? "not-allowed" : "pointer",
+        opacity: isDropped ? 0.6 : 1,
       }}
+      onClick={() => !isDropped && onClick(index)}
     >
       {text}
     </div>
   );
 }
 
-function DroppableSlot({ value, onDrop, index, isCorrect, isFilled, headings }) {
-  const [{ isOver, canDrop }, drop] = useDrop({
-    accept: ItemTypes.HEADING,
-    drop: (item) => onDrop(item.index, index),
-    canDrop: (item) => value === null,
-    collect: (monitor) => ({
-      isOver: monitor.isOver(),
-      canDrop: monitor.canDrop(),
-    }),
-  });
+function DroppableSlot({ value, onRemove, index, isCorrect, isFilled, headings }) {
   let borderColor = "#bbb";
-  let background = isFilled ? "#f0f7ff" : isOver && canDrop ? "#e6f7ff" : "#f5f5f5";
+  let background = isFilled ? "#f0f7ff" : "#f5f5f5";
   if (isFilled) {
     borderColor = isCorrect ? "#2ecc40" : "#ff4136";
     background = isCorrect ? "#eaffea" : "#ffeaea";
   }
   return (
     <div
-      ref={drop}
       className={styles["droppable-slot"]}
       style={{
         borderColor,
         background,
         minWidth: 220,
       }}
-      onDoubleClick={() => value !== null && onDrop(null, index)}
+      onDoubleClick={() => value !== null && onRemove(index)}
       title={value !== null ? "Double click to remove" : ""}
     >
       {value !== null ? headings[value] : ""}
@@ -498,16 +476,22 @@ const TharoAptisReadingPart5 = () => {
     isDropped: used.includes(i),
   }));
 
-  const handleDrop = useCallback((headingIndex, slotIndex) => {
+  const handleChoiceClick = useCallback((choiceIndex) => {
     setSlotValues((prev) => {
       const newArr = [...prev];
-      if (headingIndex === null) {
-        newArr[slotIndex] = null;
-      } else {
-        if (newArr[slotIndex] !== null) return prev;
-        if (prev.includes(headingIndex)) return prev;
-        newArr[slotIndex] = headingIndex;
+      // Tìm vị trí trống đầu tiên
+      const emptySlotIndex = newArr.findIndex(val => val === null);
+      if (emptySlotIndex !== -1) {
+        newArr[emptySlotIndex] = choiceIndex;
       }
+      return newArr;
+    });
+  }, []);
+
+  const handleRemove = useCallback((slotIndex) => {
+    setSlotValues((prev) => {
+      const newArr = [...prev];
+      newArr[slotIndex] = null;
       return newArr;
     });
   }, []);
@@ -519,84 +503,82 @@ const TharoAptisReadingPart5 = () => {
   }, [page]);
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      <div style={{ maxWidth: 700, margin: "40px auto", background: "#fff", borderRadius: 25, boxShadow: "0 2px 12px rgba(0,0,0,0.07)", padding: 24 }}>
-        <div className={styles.pagination}>
-          <button
-            className={styles['pagination-btn']}
-            onClick={() => setPage(p => Math.max(0, p - 1))}
-            disabled={page === 0}
-          >&lt;</button>
-          <span className={styles['pagination-label']}>Page {page + 1} / {PART5_PAGES.length}</span>
-          <button
-            className={styles['pagination-btn']}
-            onClick={() => setPage(p => Math.min(PART5_PAGES.length - 1, p + 1))}
-            disabled={page === PART5_PAGES.length - 1}
-          >&gt;</button>
-        </div>
-        <div><span className="topic-color">{topic}</span>
-
-        </div>
+    <div style={{ maxWidth: 700, margin: "40px auto", background: "#fff", borderRadius: 25, boxShadow: "0 2px 12px rgba(0,0,0,0.07)", padding: 24 }}>
+      <div className={styles.pagination}>
         <button
-          onClick={() => setShowSuggestions(s => !s)}
-          style={{
-            marginBottom: 18,
-            padding: '8px 18px',
-            fontWeight: 600,
-            fontSize: 16,
-            background: '#2d3a4a',
-            color: '#fff',
-            border: 'none',
-            borderRadius: 6,
-            cursor: 'pointer',
-            boxShadow: '0 1px 4px rgba(0,0,0,0.07)',
-            transition: 'background 0.2s',
-          }}
-        >
-          Gợi ý
-        </button>
-        {showSuggestions && (
-          <div style={{
-            background: '#f5f5f5',
-            border: '1px solid #bbb',
-            borderRadius: 6,
-            padding: 16,
-            marginBottom: 18,
-            fontSize: 16,
-            color: '#2d3a4a',
-            lineHeight: 1.7,
-          }}>
-            {suggestions.map((s, idx) => (
-              <div key={idx} style={{ marginBottom: 4 }}>{s}</div>
-            ))}
-          </div>
-        )}
-        <div style={{ display: 'flex', gap: 32 }}>
-          <div style={{ flex: 1 }}>
-            {[0,1,2,3,4,5,6].map(idx => (
-              <div key={idx} style={{ display: 'flex', alignItems: 'center', marginBottom: 12 }}>
-                <span style={{ width: 18, fontWeight: 600 }}>{idx}.</span>
-                <DroppableSlot
-                  value={slotValues[idx]}
-                  index={idx}
-                  onDrop={handleDrop}
-                  isFilled={slotValues[idx] !== null}
-                  isCorrect={slotValues[idx] !== null && slotValues[idx] === correctOrder[idx]}
-                  headings={choices}
-                />
-              </div>
-            ))}
-          </div>
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 14 }}>
-            {availableHeadings.map(({ text, index, isDropped }) =>
-              !isDropped ? (
-                <HeadingChoice key={index} text={text} index={index} isDropped={isDropped} />
-              ) : null
-            )}
-          </div>
+          className={styles['pagination-btn']}
+          onClick={() => setPage(p => Math.max(0, p - 1))}
+          disabled={page === 0}
+        >&lt;</button>
+        <span className={styles['pagination-label']}>Page {page + 1} / {PART5_PAGES.length}</span>
+        <button
+          className={styles['pagination-btn']}
+          onClick={() => setPage(p => Math.min(PART5_PAGES.length - 1, p + 1))}
+          disabled={page === PART5_PAGES.length - 1}
+        >&gt;</button>
+      </div>
+      <div><span className="topic-color">{topic}</span>
+
+      </div>
+      <button
+        onClick={() => setShowSuggestions(s => !s)}
+        style={{
+          marginBottom: 18,
+          padding: '8px 18px',
+          fontWeight: 600,
+          fontSize: 16,
+          background: '#2d3a4a',
+          color: '#fff',
+          border: 'none',
+          borderRadius: 6,
+          cursor: 'pointer',
+          boxShadow: '0 1px 4px rgba(0,0,0,0.07)',
+          transition: 'background 0.2s',
+        }}
+      >
+        Gợi ý
+      </button>
+      {showSuggestions && (
+        <div style={{
+          background: '#f5f5f5',
+          border: '1px solid #bbb',
+          borderRadius: 6,
+          padding: 16,
+          marginBottom: 18,
+          fontSize: 16,
+          color: '#2d3a4a',
+          lineHeight: 1.7,
+        }}>
+          {suggestions.map((s, idx) => (
+            <div key={idx} style={{ marginBottom: 4 }}>{s}</div>
+          ))}
+        </div>
+      )}
+      <div style={{ display: 'flex', gap: 32 }}>
+        <div style={{ flex: 1 }}>
+          {[0,1,2,3,4,5,6].map(idx => (
+            <div key={idx} style={{ display: 'flex', alignItems: 'center', marginBottom: 12 }}>
+              <span style={{ width: 18, fontWeight: 600 }}>{idx}.</span>
+              <DroppableSlot
+                value={slotValues[idx]}
+                index={idx}
+                onRemove={handleRemove}
+                isFilled={slotValues[idx] !== null}
+                isCorrect={slotValues[idx] !== null && slotValues[idx] === correctOrder[idx]}
+                headings={choices}
+              />
+            </div>
+          ))}
+        </div>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 14 }}>
+          {availableHeadings.map(({ text, index, isDropped }) =>
+            !isDropped ? (
+              <HeadingChoice key={index} text={text} index={index} isDropped={isDropped} onClick={handleChoiceClick} />
+            ) : null
+          )}
         </div>
       </div>
-    </DndProvider>
+    </div>
   );
 };
 
