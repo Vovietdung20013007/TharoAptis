@@ -4,14 +4,15 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import styles from "./TharoAptisReading.module.css";
 
 const DEFAULT_CHOICES = [
-  "1.You must return your keys to the office manager after you get back.",
-  "2.You should arrive at the main office by 6.30am and collect your keys.",
-  "3.You must follow the route on the map to deliver packages	.",
-  "4.When you have completed all deliveries, return to your office.",
-  "5.In the office, you can also collect a map of your route."
+  "1.Now things have changed, actors and filmmakers can earn millions of dollars from film production.",
+  "2.Old movies were very different from today's movies.",
+  "3.Not only did these technological limitations exist, the movies were also low budget.",
+  "4.Due to the lack of money, actors also had few opportunities to earn money through acting.",
+  "5.That's because the movies were only in black and white, and sometimes without sound."
 ];
 const DEFAULT_CORRECT_ORDER = [1, 4, 2, 3, 0];
 const DEFAULT_TOPIC = "Delivery man";
+const DEFAULT_TITLE = "";
 const ItemTypes = { CHOICE: "choice" };
 
 function Choice({ text, index, isDropped }) {
@@ -66,7 +67,7 @@ function DroppableSlot({ value, onDrop, index, isCorrect, isFilled, choices }) {
   );
 }
 
-const TharoAptisReading = ({ topic = DEFAULT_TOPIC, choices = DEFAULT_CHOICES, correctOrder = DEFAULT_CORRECT_ORDER }) => {
+const TharoAptisReading = ({ topic = DEFAULT_TOPIC,title = DEFAULT_TITLE , choices = DEFAULT_CHOICES, correctOrder = DEFAULT_CORRECT_ORDER }) => {
   const [slotValues, setSlotValues] = useState([null, null, null, null, null]);
   const used = slotValues.filter((v) => v !== null);
   const availableChoices = choices.map((c, i) => ({
@@ -93,6 +94,7 @@ const TharoAptisReading = ({ topic = DEFAULT_TOPIC, choices = DEFAULT_CHOICES, c
     <DndProvider backend={HTML5Backend}>
       <div className={styles.container}>
         <h2 className={styles.heading}>{topic}</h2>
+        <h2 className={styles.heading}>{title}</h2>
         <div className={styles["question-box"]}>
           <div className={styles["droppable-list"]}>
             {slotValues.map((val, idx) => (

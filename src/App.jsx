@@ -6,7 +6,156 @@ import TharoAptisReadingPart4 from './TharoAptisReadingPart4';
 
 const PAGE_DATA = [
   {
-    topic: 'Delivery man',
+    topic: 'Making films',
+    title: 'The first film was shown in 1895 in Paris, France.',
+    choices: [
+      '1.Due to the lack of money, actors also had few opportunities to earn money through acting.',
+      '2.Now things have changed, actors and filmmakers can earn millions of dollars from film production.',
+      '3.Old movies were very different from today\'s movies.',
+      '4.Not only did these technological limitations exist, the movies were also low budget.',
+      '5.That\'s because the movies were only in black and white, and sometimes without sound.'
+    ],
+    correctOrder: [2, 4, 3, 0, 1]
+  },
+  {
+    topic: 'Weekend activities',
+    choices: [
+      '1.After she received the prize, the following time was for children\'s activities.',
+      '2.Activities included football, swimming, skipping rope, and the children played very happily.',
+      '3.It was held on Saturday morning, there was a 10 mile race for adults.',
+      '4.After playing, the children were very hungry and ate with their parents.',
+      '5.There were 60 participants, in which Ms Kamur kept the fastest speed and won.'
+    ],
+    correctOrder: [2, 4, 0, 1, 3]
+  },
+  {
+    topic: 'The famous singer',
+    title: 'Many people dream of becoming a famous singer, but only a few achieve it.',
+    choices: [
+      '1.Thanks to his talent and style, he became more and more famous and well-known.',
+      '2.Before becoming famous, he had to practice very hard every day.',
+      '3.Many people started to notice him because of his talent and creativity',
+      '4.At the age of fifteen, he studied music at a special school.',
+      '5.With his unique style and clothes, he soon attracted attention.'
+    ],
+    correctOrder: [1, 3, 4, 2, 0]
+  },
+  {
+    topic: 'Preparing to Write about a Place',
+    choices: [
+      '1.This comparison will help you find common points between countries.',
+      '2.Before writing, we need to find out some information about the place',
+      '3.You may not find all the above information but you will find places with similarities',
+      '4.That information can revolve around the aspects: people, culture and history',
+      '5.When collecting information about the above 3 aspects, you can compare with places in your country'
+    ],
+    correctOrder: [1, 3, 2, 4, 0]
+  },
+  {
+    topic: 'Group presentation',
+    choices: [
+      '1.During the presentation, we use pictures and our own words to explain the ideas',
+      '2.Finally, group members take turns answering the questions.',
+      '3.Then, we present our topic for five minutes',
+      '4.First, we prepare materials for our group presentation',
+      '5.After the presentation, the other students ask questions'
+    ],
+    correctOrder: [3, 2, 0, 4, 1]
+  },
+  {
+    topic: 'Artificial Intelligence',
+    choices: [
+      '1.Modern AI tools help businesses analyze data and improve decision-making.',
+      '2.High computational costs restricted AI development in the past',
+      '3.Artificial intelligence has transformed industries over the past decade',
+      '4.Early AI systems were limited to basic pattern recognition tasks',
+      '5.Today, AI engineers create advanced models for tasks like language translation'
+    ],
+    correctOrder: [2, 3, 1, 4, 0]
+  },
+  {
+    topic: 'Tech Innovation Exposition',
+    choices: [
+      '1.The tech expo was held on Sunday morning, showcasing cutting-edge innovations',
+      '2.Activities included 3D printing demos, AI workshops, and virtual reality trials',
+      '3.After the presentations, awards were given for the most creative prototype',
+      '4.Attendees enjoyed networking over coffee and exploring interactive displays.',
+      '5.Over 75 participants attended, with Ms. Tran presenting a smart home device'
+    ],
+    correctOrder: [0, 4, 2, 1, 3]
+  },
+  {
+    topic: 'Internet of Things (IoT)',
+    choices: [
+      '1.Modern IoT systems enable real-time data monitoring and automation.',
+      '2.Early IoT devices were limited by slow internet speeds and compatibility issues',
+      '3.The Internet of Things connects everyday devices to enhance functionality',
+      '4.Engineers now design smart devices for homes and industries',
+      '5.High development costs restricted IoT adoption in the past'
+    ],
+    correctOrder: [2, 1, 4, 3, 0]
+  },
+  {
+    topic: 'A new cafe',
+    title: 'Yesterday I went to a new opening cafe named Corner Cafe on High street',
+    choices: [
+      '1.I chose the most expensive sandwich',
+      '2.They gave me the menu and when I looked at it I saw quite a few dishes',
+      '3.It tasted quite good and I will definitely go back to this place.',
+      '4.Although it was busy the staff still arranged a table for me',
+      '5.When I was there it was very crowded and the staff were very busy on the first day'
+    ],
+    correctOrder: [4, 3, 1, 0, 2]
+  },
+  {
+    topic: 'End-of-term Project',
+    choices: [
+      '1.After this time, other students will have questions for you and you have to answer them.',
+      '2.The end of term project will focus on at least two of these chapters.',
+      '3.This talk will point out the key points, and should last about 5 minutes in total.',
+      '4.It will have relevant pictures, and your own writing on the topic.',
+      '5.You will then need to use these pictures and written work to create a presentation for the class.'
+    ],
+    correctOrder: [1, 3, 4, 2, 0]
+  },
+  {
+    topic: 'Music festivals',
+    title: 'Last Saturday, a live music show was held in town park',
+    choices: [
+      '1.The singer performed for 2 hours, everyone had great fun.',
+      '2.People came early and sat in nearby shops waiting for the start time',
+      '3.The local government planned, funded and paid for everything',
+      '4.The staff were very busy but still closed the shop early to watch the singer',
+      '5.Because it was free, more than 5,000 people attended'
+    ],
+    correctOrder: [2, 4, 1, 3, 0]
+  },
+  {
+    topic: 'College welcome day',
+    title: 'College Welcome Day will be held on Wednesday the 13th.',
+    choices: [
+      '1.At the end of the talk, you will meet the head of department and teachers',
+      '2.This meal is on the 2nd floor of the building',
+      '3.These staff members give you a guided tour of the building',
+      '4.It starts at 10am, there is a small presentation in the main hall',
+      '5.During the trip, you have to stay with other students until lunch break'
+    ],
+    correctOrder: [3, 0, 2, 4, 1]
+  },
+  {
+    topic: 'African American Women in Space',
+    title: 'A woman whose father is a skilled worker and mother is a teacher.',
+    choices: [
+      '1.Some of those include growing plants and animals in a spaceship.',
+      '2.Being a part of this group, she traveled to space frequently, and conducted many experiments in space.',
+      '3.Her degree in the subject enabled her to take a training course in the USA.',
+      '4.With the support of her parents, she went to university and studied science.',
+      '5.This was about science, she was later a member of the research team.'
+    ],
+    correctOrder: [3, 2, 4, 1, 0]
+  },
+  {
+    topic: 'Delivery man -- Từ đây trở đi là đề cũ nha',
     choices: [
       "1.You must return your keys to the office manager after you get back.",
       "2.You should arrive at the main office by 6.30am and collect your keys.",
