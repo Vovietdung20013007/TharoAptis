@@ -523,6 +523,7 @@ function App() {
             <TharoAptisReading
               key={page}
               topic={PAGE_DATA[page].topic}
+              title={PAGE_DATA[page].title}
               choices={PAGE_DATA[page].choices}
               correctOrder={PAGE_DATA[page].correctOrder}
             />

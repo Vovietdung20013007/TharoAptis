@@ -25,6 +25,7 @@ const PART5_PAGES = [
     correctOrder: [2, 3, 5, 0, 6, 1, 4]
   },
   {
+    topic :"THE ARRIVAL OF 4-DAYS WORK WEEK (đề mới cập nhật T10/2025) - thi cực nhiều",
     choices: [
       '1.Difficulty Changing Old Habits',
       '2.Alternative solutions worth considering',
@@ -46,6 +47,7 @@ const PART5_PAGES = [
     correctOrder: [2, 3, 4, 5, 0, 6, 1]
   },
   {
+    topic :" DIGITAL TRANSFORMATION (đề mới cập nhật T10/2025) - thi nhiều",
     choices: [
       '1.Building inclusive digital ecosystems',
       '2.Concerns about cybersecurity risks',
@@ -67,6 +69,7 @@ const PART5_PAGES = [
     correctOrder: [3, 6, 2, 5, 1, 0, 4]
   },
   {
+    topic :"WELLNESS TRENDS (đề mới cập nhật T9/2025)",
     choices: [
       '1.Labels can change perspective on people',
       '2.Redefining holistic health approaches',
@@ -88,6 +91,7 @@ const PART5_PAGES = [
     correctOrder: [1, 2, 5, 6, 0, 3, 4]
   },
   {
+    topic :"WOMEN MATHEMATICIANS (đề mới cập nhật T10/2025, đề này các giảng viên đi thi vẫn chưa gặp lại nên 7 câu dưới chưa sát 100%, học viên nên dịch sang tiếng việt để học hiệu quả hơn) - thi nhiều",
     choices: [
       '1.The problem with labels',
       '2.A long career of excellence',
@@ -109,6 +113,7 @@ const PART5_PAGES = [
     correctOrder: [3, 4, 6, 1, 0, 2, 5]
   },
   {
+    topic :"TECHNOLOGY (đề mới cập nhật T10/2025)",
     choices: [
       '1.Overreliance on digital interfaces',
       '2.Promoting tech-driven education programs',
@@ -517,9 +522,7 @@ const TharoAptisReadingPart5 = () => {
           disabled={page === PART5_PAGES.length - 1}
         >&gt;</button>
       </div>
-      <div><span className="topic-color">{topic}</span>
-
-      </div>
+      <div><span className={styles['topic-color']}>{topic}</span></div>
       <button
         onClick={() => setShowSuggestions(s => !s)}
         style={{
